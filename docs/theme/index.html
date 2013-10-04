@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>{{ project.name }} by {{ project.github_maintainer }}</title>
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- Loading Bootstrap -->
+        <link href="{{ static_file('main.css') }}" rel="stylesheet">
+        <link href="{{ static_file('style.css') }}" rel="stylesheet">
+        <link rel="shortcut icon" href="{{ static_file('img/favicon.ico') }}">
+        <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+        <!--[if lt IE 9]>
+        <script src="js/html5shiv.js"></script>
+        <![endif]-->
+        <script type="text/javascript" src="{{ static_file('js/prefixfree.min.js') }}"></script>
+    </head>
+
+    {% macro include_markdown(name) -%}
+        {% for page in master_index %}
+            {% if page.relative_path.endswith(name) %}
+                {{ page.documentation|safe }}
+            {% endif %}
+        {% endfor %}
+    {%- endmacro %}
+
+    {% macro render_menu_item(index, header, page_id, child=False) -%}
+    <li id="toc-item-{{ header.anchor.strip("#") }}" class="{% if child %} sub {% endif %}">
+        <a class="toc-link" href="{{ header.anchor }}" data-page-id="{{ page_id }}">
+            <span class="index">{{ index }} </span>
+                {{ header.text|safe }}
+        </a>
+    </li>
+        {% if 'child' in header and index.count('.') < 2 %}
+            {% for child in header['child'] %}
+                {{ render_menu_item("{0}.{1}".format(index, loop.index), child, page_id, True) }}
+            {% endfor %}
+        {% endif %}
+    {%- endmacro %}
+
+    <body>
+        <div class="navbar">
+            <div class="navbar-inner">
+                <nav class="container">
+                    <ul class="nav">
+                        <li><a href="/">&larr; Home</a></li>
+                        <li><a href="http://github.com/clarete/curdling">Github</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+        <article>
+            <aside>
+
+                {{ include_markdown("sidebar.md") }}
+
+                <ul class="footer">
+                    <li>
+                        <div>
+                            <iframe src="http://ghbtns.com/github-btn.html?user=clarete&repo=curdling&type=watch&count=true"
+                                    allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
+                        </div>
+                    </li>
+                    <li>
+                        <div>
+                            <script data-gittip-username="clarete"
+                                    data-gittip-widget="button"
+                                    src="//gttp.co/v1.js"></script>
+                        </div>
+                    </li>
+                    <li>
+                        Project and theme by <a href="http://github.com/clarete">Lincoln de Sousa</a>. Theme
+                        based on the <a href="http://pretty-rfc.herokuapp.com">Pretty RFC theme</a>.
+                        Generated with <a href="http://falcao.it/markment">Markment</a>
+                    </li>
+                    <li>
+                        <a href="{{ project.github_url }}">&hearts; Github</a>
+                    </li>
+                </ul>
+            </aside>
+
+            {{ documentation|safe }}
+
+        </article>
+    </body>
+</html>

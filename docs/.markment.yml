@@ -1,0 +1,6 @@
+project:
+  name: Curdling
+  version: 0.2.1
+  description: Curdles your cheesy code and extracts its binaries
+  github_maintainer_url: http://github.com/clarete
+  github_maintainer_name: Lincoln de Sousa
